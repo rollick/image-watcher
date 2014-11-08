@@ -1,1 +1,1 @@
-fswatch -0 -r -n -I -x <path to images> | xargs -0 -n1 -I{} ruby handler.rb -a {}
+fswatch -0 --format "%p|%f" --event-flag-separator="|" <path to images> | xargs -0 -n1 -I{} ruby handler.rb -a {}
