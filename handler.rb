@@ -8,21 +8,14 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: handler.rb [options]"
 
-  opts.on("-a", "--args [ARGUMENTS]", "Filename and flag arguments from fswatch (| as separator)") do |a|
-    options[:args] = a
+  opts.on("-p", "--path [PATH]", "Path to file") do |p|
+    options[:path] = p
   end
 end.parse!
 
-parts = options[:args].split("|")
+path = options[:path]
 
-unless parts.length > 2
-    raise "Path and flag not provided!"
-end
-
-path = parts[0]
-is_file = parts.include? "IsFile"
-
-if is_file && path.match(/\.(jpg|png|jpeg)$/i)
+if path.match(/\.(jpg|png|jpeg)$/i)
     include Mongo
 
     gallery = MongoClient.new("localhost", 27017).db("gallery")
@@ -56,4 +49,6 @@ if is_file && path.match(/\.(jpg|png|jpeg)$/i)
             p "Skipping existing image (#{path})..."
         end
     end
+else
+  p "Skipping non-image..."
 end
