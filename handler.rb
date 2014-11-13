@@ -2,18 +2,25 @@ require "optparse"
 require "mongo"
 require "exifr"
 require "murmurhash3"
+require 'mini_magick'
 
 
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: handler.rb [options]"
 
-  opts.on("-p", "--path [PATH]", "Path to file") do |p|
+  opts.on("-p", "--path PATH", "Path to file") do |p|
     options[:path] = p
+  end
+
+  opts.on("-r", "--root-path ROOT_PATH", "Root path for images") do |r|
+    options[:root_path] = r
   end
 end.parse!
 
 path = options[:path]
+# No trailing slash for root path
+root_path = options[:root_path].gsub(/\/$/, '')
 
 if path.match(/\.(jpg|png|jpeg)$/i)
     include Mongo
@@ -37,8 +44,20 @@ if path.match(/\.(jpg|png|jpeg)$/i)
 
             info = EXIFR::JPEG.new(path)
             date_taken = info.date_time_digitized ? info.date_time_digitized : (info.date_time ? info.date_time : Time.now)
+            relative_path = path.gsub(root_path, '')
+            thumb_path = "#{root_path}/~thumbnails/#{hash}.jpg"
+
+            # Generate thumbnail
+            image = MiniMagick::Image.open(path)
+            image.combine_options do |c|
+              c.thumbnail '200x200^'
+              c.gravity 'center'
+              c.extent '200x200'
+            end
+            image.write thumb_path
 
             image = {
+                "relative_path" => relative_path,
                 "path" => path,
                 "hash" => hash,
                 "dateTaken" => date_taken
@@ -52,3 +71,4 @@ if path.match(/\.(jpg|png|jpeg)$/i)
 else
   p "Skipping non-image..."
 end
+
