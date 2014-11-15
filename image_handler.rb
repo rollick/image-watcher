@@ -5,15 +5,17 @@ require 'mini_magick'
 
 
 class ImageHandler
-    def self.perform(path, root_path)
+    def self.perform(path, root_path, events)
         if path.match(/\.(jpg|png|jpeg)$/i)
             include Mongo
 
             gallery = MongoClient.new("localhost", 27017).db("gallery")
             images = gallery.collection("images")
 
-            # If path doesn't exist then delete the record
-            if !File.exist?(path)
+            # If the event was "MOVED_FROM" or path doesn't exist then delete 
+            # the record. When files are edited then btsync will move the 
+            # old file version to an archive folder rather than delete/add.
+            if events.include? "MOVED_FROM" || !File.exist?(path)
                 p "Deleting image (#{path})..."
                 
                 # TODO: How to remove the deleted photo without the hash?

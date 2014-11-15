@@ -8,7 +8,7 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: handler.rb [options]"
 
-  opts.on("-p", "--path PATH", "Path to file") do |p|
+  opts.on("-p", "--path PATH", "Path to file and list of events (| separated)") do |p|
     options[:path] = p
   end
 
@@ -17,9 +17,12 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-path = options[:path]
+parts = options[:path].split("|")
+path = parts.shift
+events = parts
+
 # No trailing slash for root path
 root_path = options[:root_path].gsub(/\/$/, '')
 
-job = Qu.enqueue ImageHandler, path, root_path
+job = Qu.enqueue ImageHandler, path, root_path, events
 puts "Enqueued job #{job.id}"
