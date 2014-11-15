@@ -6,5 +6,6 @@
 # For linux
 inotifywait -rme move,create,delete -r --exclude "[[\!|\.]sync|~thumbnails]" --format "%w%f" /var/www/sync | while read FILE; 
 do
-	ruby handler.rb -r /var/www/sync -p "$FILE"; 
+    ruby handler.rb -r /var/www/sync -p "$FILE"; 
 done
+
