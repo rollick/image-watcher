@@ -42,16 +42,20 @@ class ImageHandler
                             "thumbnail" => "200x200^"
                         },
                         {
-                            "path" => "#{root_path}/~resized/#{hash}_medium.jpg",
+                            "path" => "#{root_path}/~resized/#{hash}_small.jpg",
                             "resize" => "640x640"
                         },
                         {
-                            "path" => "#{root_path}/~resized/#{hash}_large.jpg",
+                            "path" => "#{root_path}/~resized/#{hash}_medium.jpg",
                             "resize" => "1024x1024"
                         },
                         {
-                            "path" => "#{root_path}/~resized/#{hash}_xlarge.jpg",
+                            "path" => "#{root_path}/~resized/#{hash}_large.jpg",
                             "resize" => "1280x1280"
+                        },
+                        {
+                            "path" => "#{root_path}/~resized/#{hash}_xlarge.jpg",
+                            "resize" => "1440x1440"
                         }
                     ]
 
