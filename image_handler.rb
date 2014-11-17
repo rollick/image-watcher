@@ -30,23 +30,50 @@ class ImageHandler
 
                     info = EXIFR::JPEG.new(path)
                     date_taken = info.date_time_digitized ? info.date_time_digitized : (info.date_time ? info.date_time : Time.now)
+
+                    # relative path for use by website
                     relative_path = path.gsub(root_path, '')
-                    thumb_path = "#{root_path}/~thumbnails/#{hash}.jpg"
 
-                    # Generate thumbnail
+                    # Resize image
+                    image_sizes = [
+                        {
+                            "path" => "#{root_path}/~resized/#{hash}_thumb.jpg",
+                            "extent" => "200x200",
+                            "thumbnail" => "200x200^"
+                        },
+                        {
+                            "path" => "#{root_path}/~resized/#{hash}_medium.jpg",
+                            "extend" => "640x640"
+                        },
+                        {
+                            "path" => "#{root_path}/~resized/#{hash}_large.jpg",
+                            "extend" => "1024x1024"
+                        },
+                        {
+                            "path" => "#{root_path}/~resized/#{hash}_xlarge.jpg",
+                            "extend" => "1280x1280"
+                        }
+                    ]
+
+                    # Generate resized images
                     image = MiniMagick::Image.open(path)
-                    image.combine_options do |c|
-                      c.thumbnail '200x200^'
-                      c.gravity 'center'
-                      c.extent '200x200'
-                    end
-                    image.write thumb_path
+                    image_sizes.each do |size|
+                        image.combine_options do |c|
+                          c.thumbnail size["thumbnail"] if size["thumbnail"]
+                          c.extent size["extent"]
+                          c.gravity "center"
+                        end
 
+                        image.write size["path"]
+                    end
+
+                    # Create image 
                     image = {
                         "relative_path" => relative_path,
                         "path" => path,
                         "hash" => hash,
-                        "dateTaken" => date_taken
+                        "date_taken" => date_taken,
+                        "exif" => info.to_hash
                     }
 
                     images.insert(image)
