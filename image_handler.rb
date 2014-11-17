@@ -56,8 +56,8 @@ class ImageHandler
                     ]
 
                     # Generate resized images
-                    image = MiniMagick::Image.open(path)
                     image_sizes.each do |size|
+                        image = MiniMagick::Image.open(path)
                         image.combine_options do |c|
                             if size["thumbnail"]
                                 c.thumbnail size["thumbnail"] 
