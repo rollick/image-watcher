@@ -74,13 +74,12 @@ class ImageHandler
                         "hash" => hash,
                         "date_taken" => date_taken,
                         "exif" => {
-                            "width" => info["width"],
-                            "height" => info["height"],
-                            "bits" => info["bits"],
-                            "comment" => info["comment"],
-                            "f_number" => info["f_number"],
-                            "shutter_speed_value" => info["shutter_speed_value"],
-                            "aperture_value" => info["aperture_value"]
+                            "width" => info.width,
+                            "height" => info.height,
+                            "comment" => info.comment,
+                            "f_number" => info.exif.f_number,
+                            "shutter_speed_value" => info.shutter_speed_value,
+                            "aperture_value" => info.aperture_value
                         }
                     }
 
