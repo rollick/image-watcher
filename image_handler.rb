@@ -73,7 +73,15 @@ class ImageHandler
                         "path" => path,
                         "hash" => hash,
                         "date_taken" => date_taken,
-                        "exif" => info.to_hash
+                        "exif" => {
+                            "width" => info["width"],
+                            "height" => info["height"],
+                            "bits" => info["bits"],
+                            "comment" => info["comment"],
+                            "f_number" => info["f_number"],
+                            "shutter_speed_value" => info["shutter_speed_value"],
+                            "aperture_value" => info["aperture_value"]
+                        }
                     }
 
                     images.insert(image)
