@@ -43,15 +43,15 @@ class ImageHandler
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_medium.jpg",
-                            "extent" => "640x640"
+                            "resize" => "640x640"
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_large.jpg",
-                            "extent" => "1024x1024"
+                            "resize" => "1024x1024"
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_xlarge.jpg",
-                            "extent" => "1280x1280"
+                            "resize" => "1280x1280"
                         }
                     ]
 
@@ -59,9 +59,13 @@ class ImageHandler
                     image = MiniMagick::Image.open(path)
                     image_sizes.each do |size|
                         image.combine_options do |c|
-                          c.thumbnail size["thumbnail"] if size["thumbnail"]
-                          c.extent size["extent"]
-                          c.gravity "center"
+                            if size["thumbnail"]
+                                c.thumbnail size["thumbnail"] 
+                                c.extent size["extent"]
+                                c.gravity "center"
+                            elsif size["resize"]
+                                c.resize size["resize"]
+                            end
                         end
 
                         image.write size["path"]
