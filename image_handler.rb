@@ -43,15 +43,15 @@ class ImageHandler
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_medium.jpg",
-                            "extend" => "640x640"
+                            "extent" => "640x640"
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_large.jpg",
-                            "extend" => "1024x1024"
+                            "extent" => "1024x1024"
                         },
                         {
                             "path" => "#{root_path}/~resized/#{hash}_xlarge.jpg",
-                            "extend" => "1280x1280"
+                            "extent" => "1280x1280"
                         }
                     ]
 
