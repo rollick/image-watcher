@@ -77,8 +77,8 @@ class ImageHandler
                             "width" => info.width,
                             "height" => info.height,
                             "comment" => info.comment,
-                            "f_number" => info.exif.f_number,
-                            "shutter_speed_value" => info.shutter_speed_value,
+                            "f_number" => info.exif.f_number.to_s,
+                            "shutter_speed_value" => info.shutter_speed_value.to_s,
                             "aperture_value" => info.aperture_value
                         }
                     }
