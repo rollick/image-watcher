@@ -1,7 +1,8 @@
 require "mongo"
 require "exifr"
 require "murmurhash3"
-require 'mini_magick'
+require "mini_magick"
+require "yaml"
 
 
 class ImageHandler
@@ -26,6 +27,45 @@ class ImageHandler
                 
                 # If image doesn't exist in db then insert
                 if images.find({:hash => hash}).count() == 0
+                    p "Checking gallery details..."
+
+                    # Check if the gallery has a config. Search up a maximum 
+                    # of 3 directories to find the gallery.yml
+                    dir_name = File.dirname(path)
+                    n = 0
+
+                    Dir.chdir(dir_name)
+                    begin
+                        unless found_config = Dir.entries('.').include?('gallery.yml')
+                            Dir.chdir("..")
+                        end
+                        n += 1
+                    end while n < 3 and !found_config
+
+                    extra_info = {}
+                    if found_config
+                        config = YAML.load(File.open("./gallery.yml").read)
+
+                        if config["name"]
+                            name = config["name"]
+                            slug = name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+                            
+                            galleries = gallery.collection("galleries")
+                            gallery = galleries.find_one({:_id => slug})
+                            unless gallery
+                                gallery = galleries.insert({
+                                    :_id => slug, 
+                                    :name => name, 
+                                    :password => config["password"]
+                                })
+                            end
+
+                            extra_info["gallery_id"] = gallery["_id"]
+                        end
+                    else
+                        p "... No gallery config found."
+                    end
+
                     p "Inserting image (#{path})..."
 
                     info = EXIFR::JPEG.new(path)
@@ -91,7 +131,9 @@ class ImageHandler
                         }
                     }
 
-                    images.insert(image)
+                    # Create image record with standard data and 
+                    # extra info (eg associated gallery)
+                    images.insert(image.merge(extra_info))
                 else
                     p "Skipping existing image (#{path})..."
                 end
