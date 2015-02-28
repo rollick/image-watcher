@@ -51,11 +51,21 @@ class ImageHandler
                             
                             galleries = gallery.collection("galleries")
                             gallery = galleries.find_one({:_id => slug})
-                            unless gallery
+                            if gallery
+                                # Update the gallery security details as these can change
+                                # name / slug can't be changed.
+                                galleries.update({:_id => gallery["_id"]}, {
+                                    "$set" => {
+                                        :question => config["question"],
+                                        :answer => config["answer"]
+                                    }
+                                })
+                            else
                                 gallery = galleries.insert({
                                     :_id => slug, 
                                     :name => name, 
-                                    :password => config["password"]
+                                    :question => config["question"],
+                                    :answer => config["answer"]
                                 })
                             end
 
