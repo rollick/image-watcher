@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem "rake"
 gem "bson_ext"
 gem "foreman"
 gem "thumbnailer"

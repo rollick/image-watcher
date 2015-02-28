@@ -14,11 +14,10 @@ class ImageHandler
             images = gallery.collection("images")
 
             # If the event was "MOVED_FROM" or path doesn't exist then delete 
-            # the record. When files are edited then btsync will move the 
+            # the record. When files are edited then btsync/syncthing will move the 
             # old file version to an archive folder rather than delete/add.
-            if events.include? "MOVED_FROM" || !File.exist?(path)
-                p "Deleting image (#{path})..."
-                
+            p "Does #{path} exist? #{File.exist?(path)}"
+            if !File.exist?(path) || events.include?("MOVED_FROM")                
                 # TODO: How to remove the deleted photo without the hash?
                 #       Image path isn't very reliable.
                 images.remove({:path => path})
