@@ -134,7 +134,7 @@ class ImageHandler
                             "width" => info.width,
                             "height" => info.height,
                             "comment" => info.comment,
-                            "f_number" => info.exif.f_number.to_s,
+                            "f_number" => info.exif ? info.exif.f_number.to_s : nil,
                             "shutter_speed_value" => info.shutter_speed_value.to_s,
                             "aperture_value" => info.aperture_value
                         }
