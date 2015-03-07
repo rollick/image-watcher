@@ -1,5 +1,4 @@
 require "optparse"
-require "qu-mongo"
 
 require_relative "./image_handler"
 
@@ -24,5 +23,5 @@ events = parts
 # No trailing slash for root path
 root_path = options[:root_path].gsub(/\/$/, '')
 
-job = Qu.enqueue ImageHandler, path, root_path, events
+job = ImageHandler.create(path, root_path, events)
 puts "Enqueued job #{job.id}"
