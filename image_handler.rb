@@ -4,6 +4,7 @@ require "murmurhash3"
 require "mini_magick"
 require "yaml"
 require "qu-mongo"
+require "date"
 
 
 class ImageHandler < Qu::Job
@@ -155,7 +156,8 @@ class ImageHandler < Qu::Job
                 galleries.update({:_id => gallery["_id"]}, {
                     "$set" => {
                         :question => config["question"],
-                        :answer => config["answer"]
+                        :answer => config["answer"],
+                        :created => config["created"] || DateTime.now
                     }
                 })
             else
@@ -164,7 +166,8 @@ class ImageHandler < Qu::Job
                     :_id => slug,
                     :name => name,
                     :question => config["question"],
-                    :answer => config["answer"]
+                    :answer => config["answer"],
+                    :created => DateTime.now
                 })
             end
 
