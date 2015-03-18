@@ -157,7 +157,7 @@ class ImageHandler < Qu::Job
                     "$set" => {
                         :question => config["question"],
                         :answer => config["answer"],
-                        :created => config["created"] || DateTime.now
+                        :created => config["created"] || DateTime.now.to_time.utc
                     }
                 })
             else
@@ -167,7 +167,7 @@ class ImageHandler < Qu::Job
                     :name => name,
                     :question => config["question"],
                     :answer => config["answer"],
-                    :created => DateTime.now
+                    :created => DateTime.now.to_time.utc
                 })
             end
 
